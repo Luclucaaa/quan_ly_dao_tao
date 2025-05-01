@@ -1,0 +1,20 @@
+{
+    "elements": {},
+    "attributes": {
+        "th:if": {
+            "context": "div"
+        },
+        "th:text": {
+            "context": "a"
+        },
+        "th:data-href": {
+            "context": "a"
+        },
+        "th:src": {
+            "context": "script"
+        },
+        "th:href": {
+            "context": "a"
+        }
+    }
+}

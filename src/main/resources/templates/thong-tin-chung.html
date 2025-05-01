@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý Thông tin Chung</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css"/>
+</head>
+<body>
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+<div class="content flex-grow-1 p-4">
+    <h2>Quản lý Thông tin Chung</h2>
+
+    <!-- Thêm mới -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5>Danh sách Chương trình Đào tạo</h5>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addThongTinChungModal"><i class="fas fa-plus"></i> Thêm mới</button>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Mã CTĐT</th>
+                    <th>Tên CTĐT</th>
+                    <th>Ngành</th>
+                    <th>Khoa Quản lý</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+                </thead>
+                <tbody id="thongTinChungTable">
+                <tr th:each="ctdt : ${thongTinChung}">
+                    <td th:text="${ctdt.maCtdt}"></td>
+                    <td th:text="${ctdt.tenCtdt}"></td>
+                    <td th:text="${ctdt.nganh}"></td>
+                    <td th:text="${ctdt.khoaQuanLy}"></td>
+                    <td th:text="${ctdt.trangThai}"></td>
+                    <td>
+                        <button class="btn btn-sm btn-info" th:onclick="'viewThongTinChung(' + ${ctdt.id} + ')'"><i class="fas fa-eye"></i></button>
+                        <button class="btn btn-sm btn-warning" th:onclick="'openEditThongTinChungModal(' + ${ctdt.id} + ')'"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" th:onclick="'deleteThongTinChung(' + ${ctdt.id} + ')'"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal Xem Chi tiết -->
+    <div class="modal fade" id="viewThongTinChungModal" tabindex="-1" aria-labelledby="viewThongTinChungModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewThongTinChungModalLabel">Chi tiết Chương trình Đào tạo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong>Mã CTĐT:</strong> <span id="viewMaCtdt"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Tên CTĐT:</strong> <span id="viewTenCtdt"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong>Ngành:</strong> <span id="viewNganh"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Mã Ngành:</strong> <span id="viewMaNganh"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong>Khoa Quản lý:</strong> <span id="viewKhoaQuanLy"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Hệ Đào tạo:</strong> <span id="viewHeDaoTao"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong>Trình Độ:</strong> <span id="viewTrinhDo"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Tổng Tín Chỉ:</strong> <span id="viewTongTinChi"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong>Thời Gian Đào tạo:</strong> <span id="viewThoiGianDaoTao"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Năm Ban Hành:</strong> <span id="viewNamBanHanh"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong>Trạng Thái:</strong> <span id="viewTrangThai"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Thêm/Sửa -->
+    <div class="modal fade" id="addThongTinChungModal" tabindex="-1" aria-labelledby="addThongTinChungModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addThongTinChungModalLabel">Thêm Chương trình Đào tạo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="thongTinChungForm" th:action="@{/api/thong-tin-chung}" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="id" />
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Mã CTĐT</label>
+                                <input type="text" name="maCtdt" class="form-control" placeholder="CTDT01" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tên CTĐT</label>
+                                <input type="text" name="tenCtdt" class="form-control" placeholder="Công nghệ Thông tin" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Ngành</label>
+                                <input type="text" name="nganh" class="form-control" placeholder="Công nghệ Thông tin" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Mã Ngành</label>
+                                <input type="text" name="maNganh" class="form-control" placeholder="7480201" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Khoa Quản lý</label>
+                                <input type="text" name="khoaQuanLy" class="form-control" placeholder="Khoa CNTT" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Hệ Đào tạo</label>
+                                <select name="heDaoTao" class="form-control" required>
+                                    <option value="Chính quy">Chính quy</option>
+                                    <option value="Liên thông">Liên thông</option>
+                                    <option value="Từ xa">Từ xa</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Trình Độ</label>
+                                <select name="trinhDo" class="form-control" required>
+                                    <option value="Đại học">Đại học</option>
+                                    <option value="Cao đẳng">Cao đẳng</option>
+                                    <option value="Thạc sĩ">Thạc sĩ</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tổng Tín Chỉ</label>
+                                <input type="number" name="tongTinChi" class="form-control" placeholder="120" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Thời Gian Đào tạo</label>
+                                <input type="text" name="thoiGianDaoTao" class="form-control" placeholder="4 năm" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Năm Ban Hành</label>
+                                <input type="number" name="namBanHanh" class="form-control" placeholder="2023" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Trạng Thái</label>
+                                <select name="trangThai" class="form-control" required>
+                                    <option value="Đang áp dụng">Đang áp dụng</option>
+                                    <option value="Ngừng áp dụng">Ngừng áp dụng</option>
+                                    <option value="Dự thảo">Dự thảo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/thong-tin-chung.js}"></script>
+</body>
+</html>

@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface HocPhanRepository extends JpaRepository<HocPhan, Integer> {
 
     // Tìm học phần theo mã học phần
-    Optional<HocPhan> findByMaHp(String maHp);
+    Optional<HocPhan> findByMaHp(String maHp,String tenHp);
 
     // Tìm học phần theo nhóm khung chương trình
     Iterable<HocPhan> findByNhomId(Integer nhomId);

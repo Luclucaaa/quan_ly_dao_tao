@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý Chương trình Khung</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css"/>
+</head>
+<body>
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+<div class="content flex-grow-1 p-4">
+    <h2>Quản lý Chương trình Khung</h2>
+
+    <!-- Thêm mới -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5>Danh sách Khung Chương Trình</h5>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addKhungChuongTrinhModal"><i class="fas fa-plus"></i> Thêm mới</button>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Mã Nhóm</th>
+                    <th>Tên Nhóm</th>
+                    <th>CTĐT</th>
+                    <th>Số Tín Chỉ Tối Thiểu</th>
+                    <th>Tổng Tín Chỉ</th>
+                    <th>Thao tác</th>
+                </tr>
+                </thead>
+                <tbody id="khungChuongTrinhTable">
+                <tr th:each="kct : ${khungChuongTrinh}">
+                    <td th:text="${kct.maNhom}"></td>
+                    <td th:text="${kct.tenNhom}"></td>
+                    <td th:text="${kct.tenCtdt}"></td>
+                    <td th:text="${kct.soTinChiToiThieu}"></td>
+                    <td th:text="'N/A'"></td>
+                    <td>
+                        <button class="btn btn-sm btn-info" th:onclick="'viewHocPhan(' + ${kct.id} + ')'"><i class="fas fa-eye"></i> Học Phần</button>
+                        <button class="btn btn-sm btn-warning" th:onclick="'openEditKhungChuongTrinhModal(' + ${kct.id} + ')'"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" th:onclick="'deleteKhungChuongTrinh(' + ${kct.id} + ')'"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal Thêm/Sửa Khung Chương Trình -->
+    <div class="modal fade" id="addKhungChuongTrinhModal" tabindex="-1" aria-labelledby="addKhungChuongTrinhModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addKhungChuongTrinhModalLabel">Thêm Khung Chương Trình</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="khungChuongTrinhForm" th:action="@{/api/khung-chuong-trinh}" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="id" />
+                        <div class="mb-3">
+                            <label class="form-label">Mã Nhóm</label>
+                            <input type="text" name="maNhom" class="form-control" placeholder="NHOM01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tên Nhóm</label>
+                            <input type="text" name="tenNhom" class="form-control" placeholder="Cơ sở ngành" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Chương Trình Đào Tạo</label>
+                            <select name="ctdtId" class="form-control" required>
+                                <option th:each="ctdt : ${thongTinChung}" th:value="${ctdt.id}" th:text="${ctdt.tenCtdt}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Số Tín Chỉ Tối Thiểu</label>
+                            <input type="number" name="soTinChiToiThieu" class="form-control" placeholder="30" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Xem Học Phần -->
+    <div class="modal fade" id="viewHocPhanModal" tabindex="-1" aria-labelledby="viewHocPhanModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewHocPhanModalLabel">Danh sách Học Phần</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Mã Học Phần</th>
+                            <th>Tên Học Phần</th>
+                            <th>Số Tín Chỉ</th>
+                            <th>Loại Học Phần</th>
+                        </tr>
+                        </thead>
+                        <tbody id="hocPhanTable"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/chuong-trinh-khung.js}"></script>
+</body>
+</html>

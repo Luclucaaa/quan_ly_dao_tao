@@ -20,10 +20,18 @@ public class HocPhanController {
     @Autowired
     private HocPhanService service;
 
-    // Lấy tất cả học phần
+    // Lấy tất cả học phần hoặc tìm kiếm theo query
     @GetMapping
-    public ResponseEntity<List<HocPhanDTO>> layTatCaHocPhan() {
-        List<HocPhanDTO> danhSach = service.layTatCaHocPhan();
+    public ResponseEntity<List<HocPhanDTO>> layTatCaHocPhan(@RequestParam(value = "search", required = false) String search,
+                                                            @RequestParam(value = "nhomId", required = false) Integer nhomId) {
+        List<HocPhanDTO> danhSach;
+        if (nhomId != null) {
+            danhSach = service.layHocPhanTheoNhomId(nhomId);
+        } else if (search != null) {
+            danhSach = service.timKiemHocPhan(search);
+        } else {
+            danhSach = service.layTatCaHocPhan();
+        }
         return ResponseEntity.ok(danhSach);
     }
 
@@ -53,5 +61,12 @@ public class HocPhanController {
     public ResponseEntity<Void> xoaHocPhan(@PathVariable Integer id) {
         service.xoaHocPhan(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Tính tổng số tín chỉ theo nhomId
+    @GetMapping("/tong-tin-chi")
+    public ResponseEntity<Integer> tinhTongTinChi(@RequestParam("nhomId") Integer nhomId) {
+        Integer tongTinChi = service.tinhTongTinChiTheoNhomId(nhomId);
+        return ResponseEntity.ok(tongTinChi);
     }
 }

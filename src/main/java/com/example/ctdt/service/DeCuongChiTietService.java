@@ -98,4 +98,11 @@ public class DeCuongChiTietService {
         }
         repository.deleteById(id);
     }
+    // Lấy đề cương chi tiết theo hocPhanId
+    public List<DeCuongChiTietDTO> layDeCuongChiTietTheoHocPhanId(Integer hocPhanId) {
+        return repository.findByHocPhanId(hocPhanId)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 }

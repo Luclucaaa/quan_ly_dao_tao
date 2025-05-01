@@ -20,13 +20,12 @@ public class DeCuongChiTietController {
     @Autowired
     private DeCuongChiTietService service;
 
-    // Lấy tất cả đề cương chi tiết
+        // Lấy tất cả đề cương chi tiết hoặc theo hocPhanId
     @GetMapping
-    public ResponseEntity<List<DeCuongChiTietDTO>> layTatCaDeCuongChiTiet() {
-        List<DeCuongChiTietDTO> danhSach = service.layTatCaDeCuongChiTiet();
+    public ResponseEntity<List<DeCuongChiTietDTO>> layTatCaDeCuongChiTiet(@RequestParam(value = "hocPhanId", required = false) Integer hocPhanId) {
+        List<DeCuongChiTietDTO> danhSach = hocPhanId != null ? service.layDeCuongChiTietTheoHocPhanId(hocPhanId) : service.layTatCaDeCuongChiTiet();
         return ResponseEntity.ok(danhSach);
     }
-
     // Lấy đề cương chi tiết theo ID
     @GetMapping("/{id}")
     public ResponseEntity<DeCuongChiTietDTO> layDeCuongChiTietTheoId(@PathVariable Integer id) {
