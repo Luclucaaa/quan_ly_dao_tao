@@ -117,7 +117,7 @@ public class HocPhanService {
     }
     // Lấy học phần theo nhomId
     public List<HocPhanDTO> layHocPhanTheoNhomId(Integer nhomId) {
-        return repository.findByNhomId(nhomId)
+        return ((List<HocPhan>) repository.findByNhomId(nhomId))
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -125,7 +125,7 @@ public class HocPhanService {
 
     // Tính tổng số tín chỉ theo nhomId
     public Integer tinhTongTinChiTheoNhomId(Integer nhomId) {
-        return repository.findByNhomId(nhomId)
+        return ((List<HocPhan>) repository.findByNhomId(nhomId))
                 .stream()
                 .mapToInt(HocPhan::getSoTinChi)
                 .sum();
