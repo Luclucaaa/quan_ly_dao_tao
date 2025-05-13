@@ -1,0 +1,147 @@
+.decuong-container {
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f6f8;
+  min-height: 100vh;
+  color: #2c3e50;
+}
+
+.add-button {
+  padding: 10px 20px;
+  background-color: #1abc9c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.add-button:hover {
+  background-color: #16a085;
+}
+
+.decuong-table, .cotdiem-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  margin-top: 20px;
+}
+
+.decuong-table th, .decuong-table td,
+.cotdiem-table th, .cotdiem-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+  color: black;
+}
+
+.decuong-table th, .cotdiem-table th {
+  background-color: #ecf0f1;
+  font-weight: bold;
+  color: #34495e;
+}
+
+.edit-btn {
+  background-color: #2980b9;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 4px;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 4px;
+}
+
+.view-btn {
+  background-color: #8e44ad;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #2c3e50;
+  color: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 700px;
+  position: relative;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+}
+
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.modal-content input,
+.modal-content textarea {
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: inherit;
+  color: black;
+}
+
+.modal-content textarea {
+  min-height: 60px;
+  resize: vertical;
+}
+
+.submit-btn {
+  padding: 10px;
+  background-color: #1abc9c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.close-btn {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 18px;
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  cursor: pointer;
+}

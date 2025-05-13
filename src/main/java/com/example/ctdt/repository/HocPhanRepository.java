@@ -2,19 +2,16 @@ package com.example.ctdt.repository;
 
 import com.example.ctdt.model.HocPhan;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
-/**
- * Repository cho quản lý học phần.
- */
 @Repository
 public interface HocPhanRepository extends JpaRepository<HocPhan, Integer> {
 
-    // Tìm học phần theo mã học phần
-    Optional<HocPhan> findByMaHp(String maHp,String tenHp);
+    @Query("SELECT h FROM HocPhan h WHERE h.maHp LIKE %?1% OR h.tenHp LIKE %?1%")
+    List<HocPhan> findByMaHp(String search);
 
-    // Tìm học phần theo nhóm khung chương trình
-    Iterable<HocPhan> findByNhomId(Integer nhomId);
+    List<HocPhan> findByNhomId(Integer nhomId);
 }
