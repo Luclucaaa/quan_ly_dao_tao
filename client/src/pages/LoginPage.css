@@ -28,6 +28,8 @@
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
+  background: white;
+  color: #222;
 }
 
 .login-form button {
@@ -42,6 +44,12 @@
 
 .login-form .error {
   color: red;
+  font-size: 14px;
+  text-align: center;
+}
+
+.login-form .success {
+  color: green;
   font-size: 14px;
   text-align: center;
 }
