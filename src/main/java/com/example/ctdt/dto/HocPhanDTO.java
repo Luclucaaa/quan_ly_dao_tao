@@ -14,6 +14,7 @@ public class HocPhanDTO {
     private Integer soTietLyThuyet;
     private Integer soTietThucHanh;
     private Integer nhomId;
+    private String tenNhom;
     private String loaiHp;
     private String hocPhanTienQuyet;
 }

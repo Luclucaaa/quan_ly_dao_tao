@@ -34,6 +34,7 @@ public class HocPhanService {
         dto.setSoTietLyThuyet(entity.getSoTietLyThuyet());
         dto.setSoTietThucHanh(entity.getSoTietThucHanh());
         dto.setNhomId(entity.getNhom() != null ? entity.getNhom().getId() : null);
+        dto.setTenNhom(entity.getNhom() != null ? entity.getNhom().getTenNhom() : null);
         dto.setLoaiHp(entity.getLoaiHp());
         dto.setHocPhanTienQuyet(entity.getHocPhanTienQuyet());
         return dto;
@@ -110,11 +111,12 @@ public class HocPhanService {
 
     // Tìm kiếm học phần theo mã hoặc tên
     public List<HocPhanDTO> timKiemHocPhan(String search) {
-        return repository.findByMaHp(search, search)
+        return repository.findByMaHp(search) // Chỉ truyền 1 tham số
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
     // Lấy học phần theo nhomId
     public List<HocPhanDTO> layHocPhanTheoNhomId(Integer nhomId) {
         return repository.findByNhomId(nhomId)

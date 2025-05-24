@@ -4,6 +4,7 @@ import com.example.ctdt.dto.UserDTO;
 import com.example.ctdt.model.User;
 import com.example.ctdt.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.ctdt.exception.ResourceNotFoundException;
 
@@ -19,6 +20,9 @@ public class UserService {
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     // Chuyển đổi từ entity sang DTO
     private UserDTO convertToDTO(User entity) {
         UserDTO dto = new UserDTO();
@@ -29,7 +33,7 @@ public class UserService {
         dto.setSoDienThoai(entity.getSoDienThoai());
         dto.setVaiTro(entity.getVaiTro());
         dto.setNamSinh(entity.getNamSinh());
-        dto.setTrangThai(entity.getTrangThai());
+        dto.setTrangThai(entity.getTrangThai() != null ? entity.getTrangThai() : 1);
         return dto;
     }
 
@@ -37,13 +41,13 @@ public class UserService {
     private User convertToEntity(UserDTO dto) {
         User entity = new User();
         entity.setUsername(dto.getUsername());
-        entity.setPassword("default_password"); // Cần cơ chế mã hóa mật khẩu thực tế
+        entity.setPassword(passwordEncoder.encode(dto.getPassword()));
         entity.setHoTen(dto.getHoTen());
         entity.setEmail(dto.getEmail());
-        entity.setSoDienThoai(dto.getSoDienThoai());
-        entity.setVaiTro(dto.getVaiTro());
-        entity.setNamSinh(dto.getNamSinh());
-        entity.setTrangThai(dto.getTrangThai());
+        entity.setSoDienThoai(dto.getSoDienThoai() != null && !dto.getSoDienThoai().isEmpty() ? dto.getSoDienThoai() : "");
+        entity.setVaiTro(dto.getVaiTro() != null && !dto.getVaiTro().isEmpty() ? dto.getVaiTro() : "giangvien");
+        entity.setNamSinh(dto.getNamSinh() != null ? dto.getNamSinh() : 2000);
+        entity.setTrangThai(dto.getTrangThai() != null ? dto.getTrangThai() : (byte) 1);
         return entity;
     }
 
@@ -73,12 +77,15 @@ public class UserService {
         User entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng với ID: " + id));
         entity.setUsername(dto.getUsername());
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            entity.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
         entity.setHoTen(dto.getHoTen());
         entity.setEmail(dto.getEmail());
-        entity.setSoDienThoai(dto.getSoDienThoai());
-        entity.setVaiTro(dto.getVaiTro());
-        entity.setNamSinh(dto.getNamSinh());
-        entity.setTrangThai(dto.getTrangThai());
+        entity.setSoDienThoai(dto.getSoDienThoai() != null && !dto.getSoDienThoai().isEmpty() ? dto.getSoDienThoai() : "");
+        entity.setVaiTro(dto.getVaiTro() != null && !dto.getVaiTro().isEmpty() ? dto.getVaiTro() : "giangvien");
+        entity.setNamSinh(dto.getNamSinh() != null ? dto.getNamSinh() : 2000);
+        entity.setTrangThai(dto.getTrangThai() != null ? dto.getTrangThai() : (byte) 1);
         User updatedEntity = repository.save(entity);
         return convertToDTO(updatedEntity);
     }
