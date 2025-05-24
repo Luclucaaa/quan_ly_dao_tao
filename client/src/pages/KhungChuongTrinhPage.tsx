@@ -40,12 +40,14 @@ export default function KhungChuongTrinhPage() {
   };
 
   const calculateStats = (data: KhungChuongTrinhDTO[]) => {
-    const stats = new Map<string, number>();
-    data.forEach((item) => {
-      stats.set(item.maNhom, (stats.get(item.maNhom) || 0) + +item.soTinChiToiThieu);
-    });
-    setGroupStats(stats);
-  };
+  const stats = new Map<number, number>();
+  data.forEach((item) => {
+    stats.set(item.ctdtId, (stats.get(item.ctdtId) || 0) + +item.soTinChiToiThieu);
+  });
+  setGroupStats(stats);
+};
+
+
 
   useEffect(() => {
     loadData();
@@ -114,27 +116,32 @@ export default function KhungChuongTrinhPage() {
         </tbody>
       </table>
 
+
       {showStatsModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <button className="close-btn" onClick={() => setShowStatsModal(false)}>×</button>
-            <h3>Thống kê số tín chỉ theo nhóm</h3>
-            <table className="table">
-              <thead>
-                <tr><th>Mã nhóm</th><th>Tổng số tín chỉ</th></tr>
-              </thead>
-              <tbody>
-                {Array.from(groupStats.entries()).map(([nhom, tinchi]) => (
-                  <tr key={nhom}>
-                    <td>{nhom}</td>
-                    <td>{tinchi}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+  <div className="modal">
+    <div className="modal-content">
+      <button className="close-btn" onClick={() => setShowStatsModal(false)}>×</button>
+      <h3>Thống kê số tín chỉ theo chương trình đào tạo</h3>
+      <table className="table">
+        <thead>
+          <tr><th>Chương trình đào tạo</th><th>Tổng số tín chỉ</th></tr>
+        </thead>
+        <tbody>
+          {Array.from(groupStats.entries()).map(([ctdtId, tinchi]) => {
+            const ctdtName = ctdtList.find(c => c.id === ctdtId)?.tenCtdt || 'Chưa xác định';
+            return (
+              <tr key={ctdtId}>
+                <td>{ctdtName}</td>
+                <td>{tinchi}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
+
 
       {showModal && (
         <div className="modal">
