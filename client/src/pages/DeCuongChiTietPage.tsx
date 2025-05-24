@@ -32,6 +32,8 @@ export default function DeCuongChiTietPage() {
   const [selectedDecuongId, setSelectedDecuongId] = useState<number | null>(null);
   const [showCotDiemModal, setShowCotDiemModal] = useState(false);
 
+  const [hocPhanList, setHocPhanList] = useState<{id: number, tenHp: string}[]>([]);
+
   function emptyForm(): DeCuongChiTietDTO {
     return {
       hocPhanId: 0, mucTieu: '', noiDung: '', phuongPhapGiangDay: '',
@@ -57,6 +59,12 @@ export default function DeCuongChiTietPage() {
     loadData();
   }, []);
 
+  useEffect(() => {
+    axios.get('/api/hoc-phan').then(res => {
+      setHocPhanList(res.data.map((hp: any) => ({ id: hp.id, tenHp: hp.tenHp })));
+    });
+  }, []);
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (editingId) {
@@ -70,15 +78,16 @@ export default function DeCuongChiTietPage() {
     loadData();
   };
 
-  const handleCotDiemSubmit = async (e: any) => {
+  const handleCotDiemSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (cotDiemForm.id) {
       await axios.put(`/api/cot-diem/${cotDiemForm.id}`, cotDiemForm);
     } else {
       await axios.post(`/api/cot-diem`, cotDiemForm);
     }
-    loadCotDiem(cotDiemForm.decuongId);
-    setCotDiemForm(emptyCotDiem());
+    const decuongId = cotDiemForm.decuongId;
+    setCotDiemForm({ ...emptyCotDiem(), decuongId });
+    loadCotDiem(decuongId);
   };
 
   const handleCotDiemEdit = (item: CotDiemDTO) => {
@@ -91,6 +100,12 @@ export default function DeCuongChiTietPage() {
       if (selectedDecuongId) loadCotDiem(selectedDecuongId);
     }
   };
+  const handleDelete = async (id: number) => {
+    if (window.confirm('Bạn có chắc chắn muốn xóa đề cương này?')) {
+      await axios.delete(`/api/de-cuong-chi-tiet/${id}`);
+      loadData();
+    }
+  };
 
   const handleViewCotDiem = async (decuongId: number) => {
     setSelectedDecuongId(decuongId);
@@ -98,6 +113,8 @@ export default function DeCuongChiTietPage() {
     await loadCotDiem(decuongId);
     setShowCotDiemModal(true);
   };
+
+  const tongTyLe = cotDiemList.reduce((sum, item) => sum + Number(item.tyLePhanTram), 0);
 
   return (
     <div className="decuong-container">
@@ -137,7 +154,12 @@ export default function DeCuongChiTietPage() {
             <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
             <h3>{editingId ? 'Cập nhật đề cương' : 'Thêm đề cương mới'}</h3>
             <form onSubmit={handleSubmit}>
-              <input type="number" placeholder="Học phần ID" value={form.hocPhanId} onChange={e => setForm({ ...form, hocPhanId: +e.target.value })} />
+              <select value={form.hocPhanId} onChange={e => setForm({ ...form, hocPhanId: +e.target.value })}>
+                <option value={0}>-- Chọn học phần --</option>
+                {hocPhanList.map(hp => (
+                  <option key={hp.id} value={hp.id}>{hp.tenHp}</option>
+                ))}
+              </select>
               <textarea placeholder="Mục tiêu" value={form.mucTieu} onChange={e => setForm({ ...form, mucTieu: e.target.value })} />
               <textarea placeholder="Nội dung" value={form.noiDung} onChange={e => setForm({ ...form, noiDung: e.target.value })} />
               <textarea placeholder="Phương pháp giảng dạy" value={form.phuongPhapGiangDay} onChange={e => setForm({ ...form, phuongPhapGiangDay: e.target.value })} />
@@ -156,10 +178,16 @@ export default function DeCuongChiTietPage() {
             <button className="close-btn" onClick={() => setShowCotDiemModal(false)}>×</button>
             <h3>Quản lý các cột điểm</h3>
             <form onSubmit={handleCotDiemSubmit}>
-              <input placeholder="Tên cột điểm" value={cotDiemForm.tenCotDiem} onChange={e => setCotDiemForm({ ...cotDiemForm, tenCotDiem: e.target.value })} />
-              <input type="number" placeholder="Tỷ lệ %" value={cotDiemForm.tyLePhanTram} onChange={e => setCotDiemForm({ ...cotDiemForm, tyLePhanTram: +e.target.value })} />
-              <input placeholder="Hình thức" value={cotDiemForm.hinhThuc} onChange={e => setCotDiemForm({ ...cotDiemForm, hinhThuc: e.target.value })} />
-              <button type="submit" className="submit-btn">Lưu cột điểm</button>
+              {tongTyLe < 100 ? (
+                <>
+                  <input placeholder="Tên cột điểm" value={cotDiemForm.tenCotDiem} onChange={e => setCotDiemForm({ ...cotDiemForm, tenCotDiem: e.target.value })} />
+                  <input type="number" placeholder="Tỷ lệ %" value={cotDiemForm.tyLePhanTram} onChange={e => setCotDiemForm({ ...cotDiemForm, tyLePhanTram: +e.target.value })} />
+                  <input placeholder="Hình thức" value={cotDiemForm.hinhThuc} onChange={e => setCotDiemForm({ ...cotDiemForm, hinhThuc: e.target.value })} />
+                  <button type="submit" className="submit-btn" disabled={tongTyLe >= 100}>Lưu cột điểm</button>
+                </>
+              ) : (
+                <div style={{color: 'red', marginBottom: 10}}>Tổng tỷ lệ đã đủ 100%. Không thể thêm cột điểm mới.</div>
+              )}
             </form>
             <table className="cotdiem-table">
               <thead><tr><th>Tên</th><th>Tỷ lệ</th><th>Hình thức</th><th>Hành động</th></tr></thead>

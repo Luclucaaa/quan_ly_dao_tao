@@ -34,6 +34,7 @@ public class HocPhanService {
         dto.setSoTietLyThuyet(entity.getSoTietLyThuyet());
         dto.setSoTietThucHanh(entity.getSoTietThucHanh());
         dto.setNhomId(entity.getNhom() != null ? entity.getNhom().getId() : null);
+        dto.setTenNhom(entity.getNhom() != null ? entity.getNhom().getTenNhom() : null);
         dto.setLoaiHp(entity.getLoaiHp());
         dto.setHocPhanTienQuyet(entity.getHocPhanTienQuyet());
         return dto;

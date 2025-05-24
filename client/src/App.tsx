@@ -37,7 +37,7 @@ function QuanLyDaoTaoPage() {
           <li><NavLink to="/quan-li-dao-tao/ke-hoach-day-hoc">Kế Hoạch Dạy Học</NavLink></li>
           <li><NavLink to="/quan-li-dao-tao/giang-vien">Giảng Viên</NavLink></li>
           <li><NavLink to="/quan-li-dao-tao/ke-hoach-mon-hoc">Kế hoạch mở nhóm & Phân công giảng dạy​</NavLink></li>
-          <li><NavLink to="/quan-li-dao-tao/ke-hoach-mon-hoc">Thống kê​</NavLink></li>
+          {/* <li><NavLink to="/quan-li-dao-tao/ke-hoach-mon-hoc">Thống kê​</NavLink></li> */}
           <li><NavLink to="/login">Đăng xuất</NavLink></li>
         </ul>
       </aside>

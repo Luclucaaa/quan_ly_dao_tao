@@ -6,10 +6,11 @@ interface HocPhanDTO {
   id?: number;
   maHp: string;
   tenHp: string;
-  soTinChi: number;
-  soTietLyThuyet: number;
-  soTietThucHanh: number;
-  nhomId: number;
+  soTinChi: string;
+  soTietLyThuyet: string;
+  soTietThucHanh: string;
+  nhomId: string;
+  tenNhom: string;
   loaiHp: string;
   hocPhanTienQuyet: string;
 }
@@ -20,12 +21,13 @@ export default function HocPhanPage() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [nhomList, setNhomList] = useState<{id: string, tenNhom: string}[]>([]);
 
   function emptyForm(): HocPhanDTO {
     return {
-      maHp: '', tenHp: '', soTinChi: 0,
-      soTietLyThuyet: 0, soTietThucHanh: 0,
-      nhomId: 0, loaiHp: '', hocPhanTienQuyet: ''
+      maHp: '', tenHp: '', soTinChi: '',
+      soTietLyThuyet: '', soTietThucHanh: '',
+      nhomId: '', tenNhom: '', loaiHp: '', hocPhanTienQuyet: ''
     };
   }
 
@@ -39,6 +41,10 @@ export default function HocPhanPage() {
   useEffect(() => {
     loadData();
   }, [searchTerm]);
+
+  useEffect(() => {
+    axios.get('/api/nhom-kien-thuc').then(res => setNhomList(res.data));
+  }, []);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -85,7 +91,7 @@ export default function HocPhanPage() {
       <table className="hocphan-table">
         <thead>
           <tr>
-            <th>Mã</th><th>Tên</th><th>Số TC</th><th>Lý thuyết</th><th>Thực hành</th><th>Loại</th><th>Tiên quyết</th><th>Hành động</th>
+            <th>Mã</th><th>Tên</th><th>Số TC</th><th>Lý thuyết</th><th>Thực hành</th><th>Khối kiến thức</th><th>Loại</th><th>Tiên quyết</th><th>Hành động</th>
           </tr>
         </thead>
         <tbody>
@@ -96,6 +102,7 @@ export default function HocPhanPage() {
               <td>{item.soTinChi}</td>
               <td>{item.soTietLyThuyet}</td>
               <td>{item.soTietThucHanh}</td>
+              <td>{item.tenNhom}</td>
               <td>{item.loaiHp}</td>
               <td>{item.hocPhanTienQuyet}</td>
               <td>
@@ -115,15 +122,24 @@ export default function HocPhanPage() {
             <form onSubmit={handleSubmit}>
               <input placeholder="Mã học phần" value={form.maHp} onChange={e => setForm({ ...form, maHp: e.target.value })} />
               <input placeholder="Tên học phần" value={form.tenHp} onChange={e => setForm({ ...form, tenHp: e.target.value })} />
-              <input type="number" placeholder="Số tín chỉ" value={form.soTinChi} onChange={e => setForm({ ...form, soTinChi: +e.target.value })} />
-              <input type="number" placeholder="Số tiết lý thuyết" value={form.soTietLyThuyet} onChange={e => setForm({ ...form, soTietLyThuyet: +e.target.value })} />
-              <input type="number" placeholder="Số tiết thực hành" value={form.soTietThucHanh} onChange={e => setForm({ ...form, soTietThucHanh: +e.target.value })} />
-              <input type="number" placeholder="Nhóm ID" value={form.nhomId} onChange={e => setForm({ ...form, nhomId: +e.target.value })} />
-              <input placeholder="Loại học phần" value={form.loaiHp} onChange={e => setForm({ ...form, loaiHp: e.target.value })} />
+              <input placeholder="Số tín chỉ" value={form.soTinChi} onChange={e => setForm({ ...form, soTinChi: e.target.value })} />
+              <input placeholder="Số tiết lý thuyết" value={form.soTietLyThuyet} onChange={e => setForm({ ...form, soTietLyThuyet: e.target.value })} />
+              <input placeholder="Số tiết thực hành" value={form.soTietThucHanh} onChange={e => setForm({ ...form, soTietThucHanh: e.target.value })} />
+              <select value={form.nhomId} onChange={e => setForm({ ...form, nhomId: e.target.value })}>
+                <option value="">-- Chọn nhóm kiến thức --</option>
+                {nhomList.map(n => (
+                  <option key={n.id} value={n.id}>{n.tenNhom}</option>
+                ))}
+              </select>
+              <select value={form.loaiHp} onChange={e => setForm({ ...form, loaiHp: e.target.value })}>
+                <option value="">-- Chọn loại học phần --</option>
+                <option value="Bắt buộc">Bắt buộc</option>
+                <option value="Tự chọn">Tự chọn</option>
+              </select>
               <input placeholder="Học phần tiên quyết" value={form.hocPhanTienQuyet} onChange={e => setForm({ ...form, hocPhanTienQuyet: e.target.value })} />
               <button type="submit" className="submit-btn">Lưu</button>
             </form>
-          </div>
+          </div>  
         </div>
       )}
     </div>

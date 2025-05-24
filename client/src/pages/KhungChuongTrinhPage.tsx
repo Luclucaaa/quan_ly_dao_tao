@@ -7,7 +7,7 @@ interface KhungChuongTrinhDTO {
   ctdtId: number;
   maNhom: string;
   tenNhom: string;
-  soTinChiToiThieu: number;
+  soTinChiToiThieu: string;
 }
 
 interface ThongTinChungDTO {
@@ -25,7 +25,7 @@ export default function KhungChuongTrinhPage() {
   const [groupStats, setGroupStats] = useState<Map<string, number>>(new Map());
 
   function emptyForm(): KhungChuongTrinhDTO {
-    return { ctdtId: 0, maNhom: '', tenNhom: '', soTinChiToiThieu: 0 };
+    return { ctdtId: 0, maNhom: '', tenNhom: '', soTinChiToiThieu: '' };
   }
 
   const loadData = async () => {
@@ -42,7 +42,7 @@ export default function KhungChuongTrinhPage() {
   const calculateStats = (data: KhungChuongTrinhDTO[]) => {
     const stats = new Map<string, number>();
     data.forEach((item) => {
-      stats.set(item.maNhom, (stats.get(item.maNhom) || 0) + item.soTinChiToiThieu);
+      stats.set(item.maNhom, (stats.get(item.maNhom) || 0) + +item.soTinChiToiThieu);
     });
     setGroupStats(stats);
   };
@@ -151,7 +151,7 @@ export default function KhungChuongTrinhPage() {
               <input placeholder="Mã nhóm" value={form.maNhom} onChange={e => setForm({ ...form, maNhom: e.target.value })} />
               <input placeholder="Tên nhóm" value={form.tenNhom} onChange={e => setForm({ ...form, tenNhom: e.target.value })} />
               <input type="number" placeholder="Số tín chỉ tối thiểu" value={form.soTinChiToiThieu}
-                     onChange={e => setForm({ ...form, soTinChiToiThieu: +e.target.value })} />
+                     onChange={e => setForm({ ...form, soTinChiToiThieu: e.target.value })} />
               <button type="submit" className="submit-btn">Lưu</button>
             </form>
           </div>

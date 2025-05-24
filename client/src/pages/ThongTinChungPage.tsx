@@ -11,9 +11,9 @@ interface ThongTinChungDTO {
   khoaQuanLy: string;
   heDaoTao: string;
   trinhDo: string;
-  tongTinChi: number;
+  tongTinChi: string;
   thoiGianDaoTao: string;
-  namBanHanh: number;
+  namBanHanh: string;
   trangThai: string;
 }
 
@@ -42,8 +42,8 @@ export default function ThongTinChungPage() {
   function emptyForm(): ThongTinChungDTO {
     return {
       maCtdt: '', tenCtdt: '', nganh: '', maNganh: '', khoaQuanLy: '',
-      heDaoTao: '', trinhDo: '', tongTinChi: 0, thoiGianDaoTao: '',
-      namBanHanh: 0, trangThai: ''
+      heDaoTao: '', trinhDo: '', tongTinChi: '', thoiGianDaoTao: '',
+      namBanHanh: '', trangThai: ''
     };
   }
 
